@@ -8,19 +8,39 @@ function Home({ setPlayerInfo }) {
 
   const createRoom = async () => {
     try {
-      const res = await axios.post('http://localhost:5000/create-room', {}, { withCredentials: true });
+      const res = await axios.post(
+        'http://localhost:5000/create-room',
+        {},
+        { withCredentials: true }
+      );
+
+      console.log('Room created:', res.data);
+      alert(`Room code: ${res.data.room_code}`);
+
       setPlayerInfo(res.data);
-      navigate('/room');
-    } catch (err) {
-      console.error('Error creating room:', err);
+      localStorage.setItem('playerInfo', JSON.stringify(res.data));
+
+      // Redirect to the newly created room
+      navigate(`/room/${res.data.room_code}`);
+    } catch (error) {
+      console.error('Error creating room:', error);
+      alert('Could not create room. Check the console for details.');
     }
   };
 
   const joinRoom = async () => {
     try {
-      const res = await axios.post('http://localhost:5000/join-room', { room_code: roomCode }, { withCredentials: true });
+      const res = await axios.post(
+        'http://localhost:5000/join-room',
+        { room_code: roomCode },
+        { withCredentials: true }
+      );
+
       setPlayerInfo(res.data);
-      navigate('/room');
+      localStorage.setItem('playerInfo', JSON.stringify(res.data));
+
+      // Redirect to the joined room
+      navigate(`/room/${roomCode}`);
     } catch (err) {
       console.error('Error joining room:', err);
     }
