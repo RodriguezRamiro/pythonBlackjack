@@ -1,27 +1,20 @@
 import React, { useState } from 'react';
-import axios from 'axios;'
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import Home from './pages/Home';
+import GameRoom from './pages/GameRoom';
 
-function App(){
-const [roomCode, setRoomCode] = useState('');
-const [playerId, setPlayerId] = useState('');
-const [message, setMessage] = useState('');
-const createRoom = async () => {
-const res = await axios.post('/create-room');
-setRoomCode(res.data.room_code);
-setPlayerId(res.data.player_id);
-setMessage('Room Created!');
+function App() {
+    const [playerInfo, setPlayerInfo] = useState(null);
 
-};
+    return (
+    <Router>
+    <Routes>
+    <Route path="/" element={<Home setPlayerInfo={setPlayerInfo} />} />
+    <Route path="/room" element={<GameRoom playerInfo={playerInfo} />} />
+    </Routes>
+    </Router>
 
-return (
-<div style={{ padding: 20}}>
-<h1>BlackJack</h1>
-<button onClick={createRoom}>Create Room</button>
-{message && <p> {message}</p>}
-{roomCode && <p>Room Code: {roomCode}</p>}
-{playerId && <p>Player ID: {playerId}</p>}
-</div>
-);
+    );
 }
 
 export default App;
